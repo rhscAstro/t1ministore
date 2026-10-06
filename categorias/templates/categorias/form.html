@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ 'Editar categoria' if categoria else 'Nova categoria' }}</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome *</label>
+        <input type="text" class="form-control" id="nome" name="nome" required
+               value="{{ categoria.nome if categoria else '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label for="descricao" class="form-label">Descrição</label>
+        <textarea class="form-control" id="descricao" name="descricao" rows="3">{{ categoria.descricao if categoria and categoria.descricao else '' }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{{ url_for('categorias.listar') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
