@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Produtos</h2>
+    <a href="{{ url_for('produtos.novo') }}" class="btn btn-primary">+ Novo produto</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Preço</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for produto in produtos %}
+        <tr>
+            <td>{{ produto.id }}</td>
+            <td>{{ produto.codigo }}</td>
+            <td>{{ produto.nome }}</td>
+            <td>{{ produto.categoria or 'Sem categoria' }}</td>
+            <td>R$ {{ ("%.2f"|format(produto.preco))|replace('.', ',') }}</td>
+            <td>
+                <a href="{{ url_for('produtos.editar', id=produto.id) }}"
+                   class="btn btn-sm btn-warning">Editar</a>
+                <form action="{{ url_for('produtos.excluir', id=produto.id) }}"
+                      method="post" style="display:inline"
+                      onsubmit="return confirm('Excluir este produto?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="text-center">Nenhum produto cadastrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
