@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}Nova Venda — MiniStore{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Nova Venda</h1>
+</div>
+
+<form action="{{ url_for('vendas.nova') }}" method="POST" style="max-width: 100%;">
+
+    <div style="display: flex; gap: 24px; margin-bottom: 16px;">
+
+        <div class="form-group" style="flex: 2;">
+            <label for="id_cliente">Cliente *</label>
+            <select id="id_cliente" name="id_cliente" class="form-control" required>
+                <option value="">Selecione o cliente...</option>
+                {% for c in clientes %}
+                <option value="{{ c.id }}">{{ c.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group" style="flex: 1;">
+            <label for="data_venda">Data da Venda *</label>
+            <input type="date" id="data_venda" name="data_venda"
+                   class="form-control" required>
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <label>Itens da Venda</label>
+
+        <table class="table" id="tabela-itens" style="margin-top: 8px;">
+            <thead>
+                <tr>
+                    <th style="width: 180px;">Cód. Barras</th>
+                    <th>Produto</th>
+                    <th style="width: 90px;">Qtd</th>
+                    <th style="width: 130px;">Preço Unit.</th>
+                    <th style="width: 130px;">Subtotal</th>
+                    <th style="width: 50px;"></th>
+                </tr>
+            </thead>
+            <tbody id="corpo-itens">
+                <tr class="linha-item">
+                    <td>
+                        <input type="text" class="form-control input-codigo"
+                               placeholder="Leia ou digite..."
+                               style="width: 160px;">
+                    </td>
+                    <td>
+                        <select class="form-control select-produto" name="produto_id[]" required>
+                            <option value="">Selecione...</option>
+                            {% for p in produtos %}
+                            <option value="{{ p.id }}"
+                                    data-preco="{{ p.preco }}"
+                                    data-codigo="{{ p.codigo }}">{{ p.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control input-qtd"
+                               name="quantidade[]" value="1" min="1" required>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control input-preco"
+                               name="preco_unit[]" value="0.00" step="0.01" readonly>
+                    </td>
+                    <td>
+                        <span class="subtotal-item">R$ 0,00</span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-remover">✕</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" id="btn-add-item" class="btn btn-secondary">+ Adicionar Item</button>
+    </div>
+
+    <div class="form-group" style="text-align: right; font-size: 20px; font-weight: bold; color: #1A1A2E;">
+        Total:
+        <span id="total-geral" style="color: #E94560;">R$ 0,00</span>
+        <input type="hidden" name="total" id="input-total" value="0">
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Finalizar Venda</button>
+        <a href="{{ url_for('vendas.listar') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+
+</form>
+
+<script>
+    // preenche a data de hoje se o campo estiver vazio
+    var campoData = document.getElementById('data_venda');
+    if (!campoData.value) {
+        campoData.value = new Date().toISOString().split('T')[0];
+    }
+
+    function formatarReais(valor) {
+        return 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
+    }
+
+    function recalcular(linha) {
+        var qtd   = parseFloat(linha.querySelector('.input-qtd').value)  || 0;
+        var preco = parseFloat(linha.querySelector('.input-preco').value) || 0;
+        linha.querySelector('.subtotal-item').textContent = formatarReais(qtd * preco);
+        atualizarTotal();
+    }
+
+    function atualizarTotal() {
+        var total = 0;
+        document.querySelectorAll('.subtotal-item').forEach(function(span) {
+            total += parseFloat(span.textContent.replace('R$ ', '').replace(',', '.')) || 0;
+        });
+        document.getElementById('total-geral').textContent = formatarReais(total);
+        document.getElementById('input-total').value = total.toFixed(2);
+    }
+
+    function registrarEventos(linha) {
+
+        linha.querySelector('.input-codigo').addEventListener('change', function() {
+            var codigo = this.value.trim();
+            var select = linha.querySelector('.select-produto');
+            var achou  = false;
+
+            select.querySelectorAll('option').forEach(function(opcao) {
+                if (opcao.getAttribute('data-codigo') === codigo) {
+                    select.value = opcao.value;
+                    select.dispatchEvent(new Event('change'));
+                    achou = true;
+                }
+            });
+
+            if (!achou && codigo !== '') {
+                alert('Produto com código "' + codigo + '" não encontrado.');
+            }
+
+            this.value = '';
+        });
+
+        linha.querySelector('.select-produto').addEventListener('change', function() {
+            var opcao = this.options[this.selectedIndex];
+            var preco = opcao.getAttribute('data-preco') || '0';
+            linha.querySelector('.input-preco').value = parseFloat(preco).toFixed(2);
+            recalcular(linha);
+        });
+
+        linha.querySelector('.input-qtd').addEventListener('input', function() {
+            recalcular(linha);
+        });
+
+        linha.querySelector('.btn-remover').addEventListener('click', function() {
+            if (document.querySelectorAll('.linha-item').length > 1) {
+                linha.remove();
+                atualizarTotal();
+            }
+        });
+    }
+
+    document.getElementById('btn-add-item').addEventListener('click', function() {
+        var corpo    = document.getElementById('corpo-itens');
+        var original = corpo.querySelector('.linha-item');
+        var nova     = original.cloneNode(true);
+
+        nova.querySelector('.input-codigo').value        = '';
+        nova.querySelector('.select-produto').value      = '';
+        nova.querySelector('.input-qtd').value           = '1';
+        nova.querySelector('.input-preco').value         = '0.00';
+        nova.querySelector('.subtotal-item').textContent = 'R$ 0,00';
+
+        corpo.appendChild(nova);
+        registrarEventos(nova);
+        nova.querySelector('.input-codigo').focus();
+    });
+
+    document.querySelectorAll('.linha-item').forEach(function(linha) {
+        registrarEventos(linha);
+    });
+</script>
+
+{% endblock %}
