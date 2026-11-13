@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Venda #{{ venda.id }} — MiniStore{% endblock %}
+
+{% block content %}
+
+<style>
+    .comprovante {
+        max-width: 760px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 16px;
+    }
+    .comprovante-topo {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-bottom: 2px solid #E94560;
+        padding-bottom: 14px;
+        margin-bottom: 16px;
+    }
+    .comprovante-topo h2 { margin: 0; color: #1A1A2E; }
+    .comprovante-topo small { color: #666; }
+    .comprovante-ok {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #2e7d32;
+        font-weight: bold;
+        margin-bottom: 14px;
+    }
+    .comprovante-dados p { margin: 4px 0; }
+    .comprovante-total {
+        text-align: right;
+        font-size: 20px;
+        font-weight: bold;
+        color: #1A1A2E;
+        margin-top: 12px;
+    }
+    .comprovante-total span { color: #E94560; }
+    @media print {
+        header, footer, nav, .no-print { display: none !important; }
+        .comprovante { border: none; max-width: 100%; }
+    }
+</style>
+
+<div class="page-header no-print">
+    <h1>Venda #{{ venda.id }}</h1>
+</div>
+
+<div class="comprovante">
+
+    <div class="comprovante-topo">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#E94560"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l1-5h16l1 5"/>
+            <path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/>
+            <path d="M5 12v8h14v-8"/>
+            <path d="M10 20v-5h4v5"/>
+        </svg>
+        <div>
+            <h2>MiniStore</h2>
+            <small>Comprovante de venda #{{ venda.id }}</small>
+        </div>
+    </div>
+
+    <div class="comprovante-ok">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2e7d32"
+             stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M7 12.5l3.5 3.5L17 9"/>
+        </svg>
+        Venda registrada
+    </div>
+
+    <div class="comprovante-dados">
+        <p><strong>Cliente:</strong> {{ venda.cliente }}</p>
+        <p><strong>Data:</strong> {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') if venda.data_venda else '' }}</p>
+        <p><strong>Itens:</strong> {{ itens|length }} produto(s), {{ itens|sum(attribute='quantidade') }} unidade(s)</p>
+    </div>
+
+    <table class="table" style="margin-top: 14px;">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Produto</th>
+                <th>Qtd</th>
+                <th>Preço Unit.</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in itens %}
+            <tr>
+                <td>{{ item.codigo or '' }}</td>
+                <td>{{ item.nome or '(produto removido)' }}</td>
+                <td>{{ item.quantidade }}</td>
+                <td>R$ {{ ("%.2f"|format(item.preco_unitario))|replace('.', ',') }}</td>
+                <td>R$ {{ ("%.2f"|format(item.preco_unitario * item.quantidade))|replace('.', ',') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="comprovante-total">
+        Total: <span>R$ {{ ("%.2f"|format(venda.total))|replace('.', ',') }}</span>
+    </div>
+
+</div>
+
+<div class="form-actions no-print">
+    <button type="button" class="btn btn-primary" onclick="window.print()">Imprimir comprovante</button>
+    <a href="{{ url_for('vendas.nova') }}" class="btn btn-secondary">Nova venda</a>
+    <a href="{{ url_for('vendas.listar') }}" class="btn btn-secondary">Voltar para vendas</a>
+</div>
+
+{% endblock %}
