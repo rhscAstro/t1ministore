@@ -5,15 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}MiniStore{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/extra.css') }}">
 </head>
 <body>
     <header>
         <nav>
+            {% if session.get('usuario') %}
             <a href="{{ url_for('dashboard.index') }}">Dashboard</a>
             <a href="{{ url_for('clientes.listar') }}">Clientes</a>
             <a href="{{ url_for('categorias.listar') }}">Categorias</a>
             <a href="{{ url_for('produtos.listar') }}">Produtos</a>
             <a href="{{ url_for('vendas.listar') }}">Vendas</a>
+            <span class="nav-usuario">
+                Olá, {{ session.get('usuario') }}
+                <a href="{{ url_for('auth.logout') }}">Sair</a>
+            </span>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}">MiniStore</a>
+            {% endif %}
         </nav>
     </header>
 

@@ -1,0 +1,316 @@
+/* ===== Cabeçalho das páginas: título e botão lado a lado ===== */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    color: #1A1A2E;
+}
+
+/* ===== Botões ===== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: filter 0.15s, background 0.15s, color 0.15s;
+}
+
+a.btn,
+a.btn:link,
+a.btn:visited,
+a.btn:hover {
+    text-decoration: none;
+}
+
+.btn:hover { filter: brightness(0.92); }
+.btn:active { transform: translateY(1px); }
+
+.btn-sm {
+    padding: 7px 12px;
+    font-size: 13px;
+}
+
+.btn-primary,
+a.btn-primary:link,
+a.btn-primary:visited { background: #E94560; color: #fff; }
+
+.btn-success,
+a.btn-success:link,
+a.btn-success:visited { background: #2e7d32; color: #fff; }
+
+.btn-secondary,
+a.btn-secondary:link,
+a.btn-secondary:visited { background: #6b7280; color: #fff; }
+
+.btn-danger,
+a.btn-danger:link,
+a.btn-danger:visited { background: #d32f2f; color: #fff; }
+
+.btn-info,
+a.btn-info:link,
+a.btn-info:visited { background: #1565c0; color: #fff; }
+
+/* Editar: contorno azul-marinho, preenche ao passar o mouse */
+.btn-editar,
+.btn-warning,
+a.btn-editar:link,
+a.btn-editar:visited,
+a.btn-warning:link,
+a.btn-warning:visited {
+    background: #fff;
+    color: #1A1A2E;
+    border-color: #1A1A2E;
+}
+
+.btn-editar:hover,
+.btn-warning:hover,
+a.btn-editar:hover,
+a.btn-warning:hover {
+    background: #1A1A2E;
+    color: #fff;
+    filter: none;
+}
+
+.btn-remover {
+    padding: 6px 10px;
+}
+
+/* ===== Formulários ===== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group > label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1A1A2E;
+}
+
+.obrigatorio {
+    color: #E94560;
+    margin-left: 3px;
+}
+
+.dica {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.dica a {
+    color: #E94560;
+    font-weight: 700;
+}
+
+.form-control,
+.form-select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 14px;
+    font-family: inherit;
+    font-size: 15px;
+    color: #1A1A2E;
+    background-color: #fff;
+    border: 2px solid #d4d7de;
+    border-radius: 8px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-control:hover,
+.form-select:hover {
+    border-color: #9aa0ad;
+}
+
+.form-control:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #E94560;
+    box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.15);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 90px;
+}
+
+/* Combo (select): maior, com seta própria */
+select.form-control,
+select.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    min-height: 48px;
+    padding-right: 44px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' fill='none' stroke='%23E94560' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+/* Campo com prefixo (R$) */
+.input-prefixo {
+    display: flex;
+}
+
+.input-prefixo > span {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-weight: 800;
+    color: #1A1A2E;
+    background: #eef0f4;
+    border: 2px solid #d4d7de;
+    border-right: 0;
+    border-radius: 8px 0 0 8px;
+}
+
+.input-prefixo .form-control {
+    border-radius: 0 8px 8px 0;
+}
+
+/* Botões do formulário */
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px solid #e3e5ea;
+    clear: both;
+}
+
+.form-actions .btn {
+    padding: 12px 24px;
+    font-size: 15px;
+}
+
+/* ===== Tabelas ===== */
+/* Formulário dentro da tabela (botão Excluir): sem caixa branca */
+table form,
+td form {
+    display: inline-block !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+td.acoes {
+    white-space: nowrap;
+}
+
+td.acoes .btn {
+    vertical-align: middle;
+}
+
+td.acoes > .btn,
+td.acoes > a.btn {
+    margin-right: 6px;
+}
+
+.vazio {
+    text-align: center;
+    padding: 28px 12px !important;
+    color: #6b7280;
+}
+
+/* Etiqueta de categoria */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #b3243d;
+    background: #fde8ec;
+    border-radius: 999px;
+}
+
+.badge-vazio {
+    color: #6b7280;
+    background: #eef0f4;
+    font-weight: 600;
+}
+
+.preco {
+    font-weight: 700;
+    color: #1A1A2E;
+    white-space: nowrap;
+}
+
+/* ===== Avisos ===== */
+.alert {
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid transparent;
+}
+
+.alert-success {
+    background: #e8f5e9;
+    border-color: #a5d6a7;
+    color: #1b5e20;
+}
+
+.alert-danger {
+    background: #fdecea;
+    border-color: #f5c2c0;
+    color: #8a1c1c;
+}
+
+/* ===== Menu superior ===== */
+header nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-usuario {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.nav-usuario a {
+    padding: 6px 14px;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 6px;
+}
+
+.nav-usuario a:hover {
+    background: #E94560;
+    border-color: #E94560;
+}

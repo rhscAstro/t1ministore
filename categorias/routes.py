@@ -3,7 +3,7 @@ from database import get_connection
 
 categorias_bp = Blueprint(
     "categorias",
-    __name__,
+    "categorias.routes",
     url_prefix="/categorias",
     template_folder="templates",
 )

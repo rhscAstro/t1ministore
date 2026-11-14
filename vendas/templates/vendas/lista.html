@@ -9,14 +9,6 @@
     <a href="{{ url_for('vendas.nova') }}" class="btn btn-primary">+ Nova Venda</a>
 </div>
 
-{% if vendas %}
-<p style="margin-bottom: 12px;">
-    <strong>{{ vendas|length }}</strong> venda(s) registrada(s) |
-    Total vendido:
-    <strong style="color: #E94560;">R$ {{ ("%.2f"|format(vendas|sum(attribute='total')))|replace('.', ',') }}</strong>
-</p>
-{% endif %}
-
 <table class="table">
     <thead>
         <tr>

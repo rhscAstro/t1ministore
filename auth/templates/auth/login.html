@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Entrar — MiniStore{% endblock %}
+
+{% block content %}
+
+<div style="max-width: 380px; margin: 40px auto; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 28px;">
+
+    <div style="text-align: center; margin-bottom: 20px;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#E94560"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l1-5h16l1 5"/>
+            <path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/>
+            <path d="M5 12v8h14v-8"/>
+            <path d="M10 20v-5h4v5"/>
+        </svg>
+        <h1 style="margin: 8px 0 0; color: #1A1A2E;">MiniStore</h1>
+        <small style="color: #666;">Entre para continuar</small>
+    </div>
+
+    <form method="POST">
+
+        <div class="form-group">
+            <label for="username">Usuário</label>
+            <input type="text" id="username" name="username" class="form-control"
+                   required autofocus autocomplete="username">
+        </div>
+
+        <div class="form-group">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" class="form-control"
+                   required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
+
+    </form>
+</div>
+
+{% endblock %}

@@ -1,36 +1,49 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<h2>{{ 'Editar produto' if produto else 'Novo produto' }}</h2>
+{% block title %}{{ 'Editar' if produto else 'Novo' }} produto — MiniStore{% endblock %}
 
-<form method="post">
-    <div class="mb-3">
-        <label for="codigo" class="form-label">Código *</label>
-        <input type="text" class="form-control" id="codigo" name="codigo" required
+{% block content %}
+
+<div class="page-header">
+    <h1>{{ 'Editar produto' if produto else '+ Novo produto' }}</h1>
+</div>
+
+<form method="POST">
+
+    <div class="form-group">
+        <label for="codigo">Código de barras <span class="obrigatorio">*</span></label>
+        <input type="text" id="codigo" name="codigo" class="form-control" required
+               placeholder="Ex.: 7891000100103"
                value="{{ produto.codigo if produto else '' }}">
     </div>
 
-    <div class="mb-3">
-        <label for="nome" class="form-label">Nome *</label>
-        <input type="text" class="form-control" id="nome" name="nome" required
+    <div class="form-group">
+        <label for="nome">Nome do produto <span class="obrigatorio">*</span></label>
+        <input type="text" id="nome" name="nome" class="form-control" required
+               placeholder="Ex.: Suco de laranja 1L"
                value="{{ produto.nome if produto else '' }}">
     </div>
 
-    <div class="mb-3">
-        <label for="descricao" class="form-label">Descrição</label>
-        <textarea class="form-control" id="descricao" name="descricao" rows="3">{{ produto.descricao if produto and produto.descricao else '' }}</textarea>
+    <div class="form-group">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" name="descricao" class="form-control" rows="3"
+                  placeholder="Opcional: detalhes do produto">{{ produto.descricao if produto and produto.descricao else '' }}</textarea>
     </div>
 
-    <div class="mb-3">
-        <label for="preco" class="form-label">Preço (R$) *</label>
-        <input type="number" step="0.01" min="0" class="form-control" id="preco" name="preco" required
-               value="{{ produto.preco if produto else '' }}">
+    <div class="form-group">
+        <label for="preco">Preço <span class="obrigatorio">*</span></label>
+        <div class="input-prefixo">
+            <span>R$</span>
+            <input type="number" id="preco" name="preco" class="form-control"
+                   step="0.01" min="0" required placeholder="0,00"
+                   value="{{ produto.preco if produto else '' }}">
+        </div>
     </div>
 
-    <div class="mb-3">
-        <label for="id_categoria" class="form-label">Categoria</label>
-        <select class="form-select" id="id_categoria" name="id_categoria">
-            <option value="">-- Sem categoria --</option>
+    <div class="form-group">
+        <label for="id_categoria">Categoria</label>
+        <select id="id_categoria" name="id_categoria" class="form-control">
+            <option value="">— Sem categoria —</option>
             {% for c in categorias %}
             <option value="{{ c.id }}"
                 {% if produto and produto.id_categoria == c.id %}selected{% endif %}>
@@ -38,9 +51,19 @@
             </option>
             {% endfor %}
         </select>
+        {% if categorias %}
+        <small class="dica">Escolha em qual categoria o produto se encaixa (opcional).</small>
+        {% else %}
+        <small class="dica">Nenhuma categoria cadastrada ainda.
+            <a href="{{ url_for('categorias.nova') }}">+ Cadastrar uma categoria</a></small>
+        {% endif %}
     </div>
 
-    <button type="submit" class="btn btn-success">Salvar</button>
-    <a href="{{ url_for('produtos.listar') }}" class="btn btn-secondary">Cancelar</a>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-success">✔ Salvar</button>
+        <a href="{{ url_for('produtos.listar') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+
 </form>
+
 {% endblock %}
